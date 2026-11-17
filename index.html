@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill do oceny komunikatu błędu · po polsku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fff;
+    --ink: #000;
+    --panel: #fff;
+    --accent: #000;
+    --line: #c8c8c8;
+    --dark: #fff;
+    --mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+    --text-code: 16px;
+    --text-tooltip: 20px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    height: 100%;
+    background: var(--dark);
+    overflow: hidden;
+    font-family: var(--mono);
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  #stage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 1280px;
+    height: 720px;
+    transform-origin: center center;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    padding: 36px 56px 48px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  h2 {
+    font-size: 32px;
+    line-height: 1.25;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  pre.md-instruction {
+    font-size: var(--text-code);
+    line-height: 1.45;
+    margin: 0;
+    padding: 14px 18px;
+    background: var(--panel);
+    color: #000;
+    border-radius: 0;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+    flex: 1 1 auto;
+    min-height: 0;
+    white-space: pre-wrap;
+    overflow: auto;
+  }
+  pre .c { color: #333; }
+  pre .h, pre .k { color: var(--accent); font-weight: 700; }
+  .skill-code .skill-line {
+    display: block;
+    margin: 0 -6px;
+    padding: 1px 6px;
+    border-radius: 3px;
+    cursor: default;
+  }
+  .skill-code .skill-line.is-active,
+  .skill-code .skill-line:hover {
+    background: rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+  }
+  .skill-code .skill-frontmatter { display: block; white-space: pre-wrap; }
+  .instruction-tooltip {
+    position: fixed;
+    z-index: 9999;
+    max-width: 520px;
+    padding: 14px 16px;
+    background: #fff;
+    color: #000;
+    font-family: var(--mono);
+    font-size: var(--text-tooltip);
+    line-height: 1.4;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+    border: 2px solid var(--accent);
+  }
+  .instruction-tooltip.visible { opacity: 1; visibility: visible; }
+  .instruction-tooltip strong { color: #000; font-weight: 700; }
+  .instruction-tooltip code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 1px 5px;
+  }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .tabs button {
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-bottom: 3px solid transparent;
+    padding: 8px 16px;
+    cursor: pointer;
+  }
+  .tabs button.is-active {
+    color: var(--ink);
+    background: var(--panel);
+    border-bottom-color: var(--accent);
+  }
+  .tab-panel {
+    display: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .tab-panel.is-active { display: flex; }
+  .output-section {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    margin-top: 0;
+    overflow: auto;
+    padding: 12px 14px 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--accent);
+  }
+  .output-section h3 {
+    font-size: 16px;
+    line-height: 1.3;
+    margin-bottom: 10px;
+    color: var(--accent);
+  }
+  .output-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .output-card p {
+    font-size: 13px;
+    line-height: 1.4;
+    color: #000;
+    margin-bottom: 6px;
+  }
+  .output-card table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+  }
+  .output-card th,
+  .output-card td {
+    text-align: left;
+    vertical-align: top;
+    padding: 6px 8px;
+    font-size: 12px;
+    line-height: 1.35;
+    border-bottom: 1px solid var(--line);
+    color: #000;
+  }
+  .output-card th {
+    color: #000;
+    font-weight: 700;
+    background: #f3f3f3;
+  }
+  .slide-sign {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.3;
+    color: #000;
+  }
+</style>
+</head>
+<body>
+<div id="stage">
+<section class="slide slide-skill-example">
+  <h2>Przykład: skill do oceny komunikatu błędu</h2>
+  <div class="tabs" role="tablist">
+    <button type="button" class="is-active" role="tab" id="tab-instrukcja" aria-selected="true" aria-controls="panel-instrukcja">Instrukcja</button>
+    <button type="button" role="tab" id="tab-efekty" aria-selected="false" aria-controls="panel-efekty">Efekty</button>
+  </div>
+  <div id="panel-instrukcja" class="tab-panel is-active" role="tabpanel" aria-labelledby="tab-instrukcja">
+<pre class="md-instruction skill-code"><span class="skill-line skill-frontmatter" data-explain="YAML frontmatter. Mówi, kiedy wczytać skill: name i description. Nie działa tak samo w każdym narzędziu, ale to standard dla np. Claude, Cursor, ChatGPT i Codex."><span class="c">---</span>
+name: komunikat-bledu
+description: Sprawdź komunikat błędu i zaproponuj nową wersję. Użyj, gdy ktoś wklei błąd, toast albo komunikat przy polu tekstowym.
+<span class="c">---</span></span>
+
+<span class="skill-line" data-explain="W tym nagłówku nazwij konkretnie to, co skill robi."><span class="h"># Ocena komunikatu błędu</span></span>
+
+<span class="skill-line" data-explain="Nagłówki opisują 5 bloków: 1. Zadanie, 2. Kontekst, 3. Zasady, 4. Przykłady i 5. Wynik."><span class="h">## Zadanie</span></span>
+<span class="skill-line" data-explain="Jedno, konkretne zadanie. Najpierw sprawdź, potem zaproponuj nową wersję.">Sprawdź komunikat błędu. Potem zaproponuj najwyżej 3 nowe wersje.</span>
+
+<span class="skill-line" data-explain="Miejsce na ogólny tekst dla AI. Napisz, co trzeba wiedzieć przed oceną."><span class="h">## Kontekst</span></span>
+<span class="skill-line" data-explain="Ogranicza halucynacje. Pytaj, gdy brakuje faktów o produkcie. Nie zgaduj.">Zapytaj o to, jeśli tego brakuje:</span>
+<span class="skill-line" data-explain="Nazwij miejsce na ekranie. Wtedy narzędzie zastosuje właściwy limit z sekcji Format."><span class="k">-</span> Gdzie się pojawia komunikat (toast, przy polu, modal). To ustala długość.</span>
+<span class="skill-line" data-explain="Dobra praktyka przy błędzie. Napisz, co poszło nie tak i co zrobić dalej."><span class="k">-</span> Co spowodowało błąd i co osoba może zrobić dalej</span>
+
+<span class="skill-line" data-explain="Zasady to krótkie punkty do odhaczenia, jak w checkliście."><span class="h">## Zasady</span></span>
+<span class="skill-line" data-explain="Jedna zasada UX w jednym zdaniu. Przy błędzie sprawdź przyczynę i kolejny krok. Przy pustym polu sprawdź, czy jest, co wpisać."><span class="k">-</span> Napisz, co się stało i co zrobić dalej.</span>
+<span class="skill-line" data-explain="Konkretne słowa i wielkość liter da się łatwo sprawdzić. Ogólne „trzymaj się głosu marki” – niekoniecznie."><span class="k">-</span> Wielka litera tylko na początku zdania. Pisz „wybierz”, nie „kliknij”. Pisz „zaloguj się”, nie „loguj się”.</span>
+<span class="skill-line" data-explain="Twarde zakazy są pogrubione. Zakazane słowa są nazwane wprost."><span class="k">-</span> <span class="k">**</span>Nie obwiniaj osoby.<span class="k">**</span> Unikaj „nieprawidłowy”, „niedozwolony” i „nie udało się”.</span>
+
+<span class="skill-line" data-explain="To lista oznak pisania jak AI, z Wikipedii. Wklej plik reference-ai-writing-avoid.md, gdy chcesz pełny zakaz."><span class="h">## Unikaj pisania jak AI</span></span>
+<span class="skill-line" data-explain="Jedno takie słowo albo zwrot oznacza, że ewaluacja (eval) nie przeszła pomyślnie."><span class="k">-</span> Twardy zakaz słów i zwrotów z listy Wikipedii (plik reference-ai-writing-avoid.md).</span>
+<span class="skill-line" data-explain="Pisz „jest” i „ma”. Unikaj zamienników z listy zakazów."><span class="k">-</span> Pisz „jest”, „ma”, „pozwala”.</span>
+<span class="skill-line" data-explain="Pełna lista zakazów jest w pliku reference-ai-writing-avoid.md."><span class="k">-</span> Pełna lista jest w pliku reference-ai-writing-avoid.md.</span>
+
+<span class="skill-line" data-explain="Oddziel głos od <strong>układu i długości</strong>. Wtedy wiadomo, której listy użyć."><span class="h">## Format</span></span>
+<span class="skill-line" data-explain="Ten sam limit dla toastu i błędu przy polu. Liczysz też spacje. Tak jak na slajdzie o znakach."><span class="k">-</span> Toast i błąd przy polu: maksymalnie <span class="k">**</span>90 znaków<span class="k">**</span>, razem ze spacjami.</span>
+<span class="skill-line" data-explain="Modal może być dłuższy, ale da się go przejrzeć. Różne komponenty mają różne limity."><span class="k">-</span> Modal: maksymalnie 2 krótkie zdania albo 160 znaków. Wybierz wersję krótszą.</span>
+<span class="skill-line" data-explain="Powtórz, jak liczyć znaki. Przy limicie model potrzebuje tej reguły jeszcze raz."><span class="k">-</span> Licz każdy znak, także spacje i znaki przestankowe.</span>
+<span class="skill-line" data-explain="Zasada zapisu, jak w linii o głosie wyżej. Wyjątek to nazwy własne."><span class="k">-</span> Cały komunikat: wielka litera tylko na początku zdania.</span>
+<span class="skill-line" data-explain="Błąd ma być zwięzły, aby dało się go łatwo skanować."><span class="k">-</span> Zostaw 1 albo 2 zdania. Bez listy w toaście i przy polu tekstowym.</span>
+<span class="skill-line" data-explain="Dobra praktyka, gdy błąd opisuje rozmiar, liczbę albo datę."><span class="k">-</span> Liczby pisz cyframi (na przykład 5 MB, 3 pliki, 31.12.2026).</span>
+<span class="skill-line" data-explain="Spójna interpunkcja."><span class="k">-</span> Zakończ kropką. Bez wykrzyknika.</span>
+<span class="skill-line" data-explain="Najpierw zdanie proste. Kod w nawiasie tylko wtedy, gdy zespół techniczny go wymaga."><span class="k">-</span> Nie pokazuj samego kodu błędu. Najpierw zdanie, potem kod w nawiasie.</span>
+
+<span class="skill-line" data-explain="Para „źle” i „dobrze” pokazuje kształt i ton. Wspiera zasady."><span class="h">## Przykłady</span></span>
+<span class="skill-line" data-explain="Jedna linia zestawia błąd jak z kodu z konkretną podpowiedzią.">Źle: „Nieprawidłowe dane. Błąd 422.”  Dobrze: „Wpisz datę z przyszłości, na przykład 31.12.2026.”</span>
+<span class="skill-line" data-explain="Para pokazuje za duży plik. Dobra wersja mówi, jaki plik wybrać.">Źle: „Plik jest niedozwolony. Za duży rozmiar.”  Dobrze: „Wybierz plik do 5 MB.”</span>
+<span class="skill-line" data-explain="Para pokazuje puste pole. Dobra wersja mówi, co wpisać.">Źle: „Nieprawidłowe pole. Uzupełnij dane.”  Dobrze: „Wpisz adres e-mail.”</span>
+<span class="skill-line" data-explain="Para pokazuje zły format. Dobra wersja podaje formaty PDF i PNG.">Źle: „Nieprawidłowy plik. Nie udało się go wgrać.”  Dobrze: „Dodaj plik w formacie PDF lub PNG.”</span>
+
+<span class="skill-line" data-explain="Format wyniku daje tekst do pokazania. Możesz przekazać go zespołowi."><span class="h">## Wynik</span></span>
+<span class="skill-line" data-explain="Kolumny są jak przy ocenie UX. To problem, powód i poprawka. Łatwiej skanować niż akapit.">Tabela z kolumnami: Problem | Dlaczego to problem | Propozycja poprawki</span></pre>
+  </div>
+  <div id="panel-efekty" class="tab-panel" role="tabpanel" aria-labelledby="tab-efekty" hidden>
+  <section class="output-section" aria-label="Efekty">
+    <div class="output-grid">
+      <article class="output-card">
+        <p>„Nieprawidłowe dane. Błąd 422.”</p>
+        <table>
+          <thead>
+            <tr><th>Problem</th><th>Dlaczego to problem</th><th>Propozycja poprawki</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>„Nieprawidłowe” i sam kod</td>
+              <td>Zakazane słowo. Kod bez zdania nie mówi, co wpisać.</td>
+              <td>Wpisz datę z przyszłości.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+      <article class="output-card">
+        <p>„Plik jest niedozwolony. Za duży rozmiar.”</p>
+        <table>
+          <thead>
+            <tr><th>Problem</th><th>Dlaczego to problem</th><th>Propozycja poprawki</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>„Niedozwolony” i brak liczby</td>
+              <td>Zakazane słowo. Osoba nie wie, jaki plik wybrać.</td>
+              <td>Wybierz plik do 5 MB.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+      <article class="output-card">
+        <p>„Nieprawidłowe pole. Uzupełnij dane.”</p>
+        <table>
+          <thead>
+            <tr><th>Problem</th><th>Dlaczego to problem</th><th>Propozycja poprawki</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>„Nieprawidłowe pole”</td>
+              <td>Nie mówi, co wpisać.</td>
+              <td>Wpisz adres e-mail.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+      <article class="output-card">
+        <p>„Nieprawidłowy plik. Nie udało się go wgrać.”</p>
+        <table>
+          <thead>
+            <tr><th>Problem</th><th>Dlaczego to problem</th><th>Propozycja poprawki</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>„Nieprawidłowy” i „nie udało się”</td>
+              <td>Zakazane słowa. Brak formatu.</td>
+              <td>Dodaj plik w formacie PDF lub PNG.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+    </div>
+  </section>
+  </div>
+  <p class="slide-sign">Kalina Tyrkiel-Szymańska | AI w UX Writingu | 2026</p>
+</section>
+</div>
+<div id="instruction-tooltip" class="instruction-tooltip" role="tooltip" aria-hidden="true"></div>
+<script>
+  const stage = document.getElementById('stage');
+  function fit() {
+    const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  const tip = document.getElementById('instruction-tooltip');
+  const lines = [...document.querySelectorAll('.skill-line[data-explain]')];
+  let activeLine = null;
+
+  function hideTip() {
+    tip.classList.remove('visible');
+    tip.setAttribute('aria-hidden', 'true');
+    if (activeLine) activeLine.classList.remove('is-active');
+    activeLine = null;
+  }
+
+  function placeTip(line) {
+    const html = line.getAttribute('data-explain');
+    if (!html) return;
+    tip.innerHTML = html;
+    tip.classList.add('visible');
+    tip.setAttribute('aria-hidden', 'false');
+    const rect = line.getBoundingClientRect();
+    const tipRect = tip.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.bottom + 10;
+    if (left + tipRect.width > window.innerWidth - 12) left = window.innerWidth - tipRect.width - 12;
+    if (left < 12) left = 12;
+    if (top + tipRect.height > window.innerHeight - 12) top = Math.max(12, rect.top - tipRect.height - 10);
+    tip.style.left = `${left}px`;
+    tip.style.top = `${top}px`;
+  }
+
+  lines.forEach((line) => {
+    line.addEventListener('mouseenter', () => {
+      if (activeLine && activeLine !== line) activeLine.classList.remove('is-active');
+      activeLine = line;
+      line.classList.add('is-active');
+      placeTip(line);
+    });
+    line.addEventListener('mouseleave', hideTip);
+  });
+  window.addEventListener('resize', hideTip);
+
+  document.querySelectorAll('.tabs [role="tab"]').forEach((tab) => {
+    tab.addEventListener('click', (event) => {
+      event.stopPropagation();
+      hideTip();
+      document.querySelectorAll('.tabs [role="tab"]').forEach((item) => {
+        const on = item === tab;
+        item.classList.toggle('is-active', on);
+        item.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      document.querySelectorAll('.tab-panel').forEach((panel) => {
+        const on = panel.id === tab.getAttribute('aria-controls');
+        panel.classList.toggle('is-active', on);
+        panel.hidden = !on;
+      });
+    });
+  });
+</script>
+</body>
+</html>
